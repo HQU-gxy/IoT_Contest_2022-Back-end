@@ -141,7 +141,7 @@ class checkReservationExpireThread(threading.Thread):
             reservations = cursor.fetchall()
             for reservation in reservations:
                 reserve_dt = reservation[2]
-                if reserve_dt + timedelta(seconds=15) < datetime.now():
+                if reserve_dt + timedelta(minutes=15) < datetime.now():
                     cursor.execute(
                         'update seats set status=0 where seat_num=%s', (reservation[0]))
                     cursor.execute('delete from reservations where seat_num=%s',
