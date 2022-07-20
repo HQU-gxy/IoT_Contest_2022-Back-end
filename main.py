@@ -118,11 +118,12 @@ def cancel():
         return 'UNRESERVED'
 
 
-@route('change_status', method='POST')
+@route('/change_status', method='POST')
 def change_status():
-    args = request.forms
-    seatNum = args.get('seatNum')
-    status = args.get('status')
+    args = json.loads(request.body)
+    seatNum = args['seatNum']
+    status = args['status']
+    print(seatNum, status)
     if cursor.execute('select * from seats where seat_num=%s', (seatNum)):
 
         cursor.execute(
@@ -154,6 +155,11 @@ checkReservationExpireThread().start()
 
 try:
     run(host='0.0.0.0', port=2333)
+
+except pymysql.err.InterfaceError:
+    db = pymysql.connect(host='localhost', user='fucker',
+                         passwd='2333', db='library')
+    cursor = db.cursor()
 
 finally:
     db.close()
